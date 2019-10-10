@@ -40,6 +40,8 @@ const canObserve = (value: any): boolean => {
   )
 }
 
+// REVIEW ts函数重载
+// REVIEW T extend表示这个泛型属于某个类型
 export function reactive<T extends object>(target: T): UnwrapNestedRefs<T>
 export function reactive(target: object) {
   // if trying to observe a readonly proxy, return the readonly version.
@@ -91,6 +93,7 @@ function createReactiveObject(
   }
   // target already has corresponding Proxy
   let observed = toProxy.get(target)
+  // REVIEW  等同于undefined，但是undefined有可能被改
   if (observed !== void 0) {
     return observed
   }
@@ -102,12 +105,17 @@ function createReactiveObject(
   if (!canObserve(target)) {
     return target
   }
+  // NOTE 这里需要再理解，为什么要区分collection和base?
   const handlers = collectionTypes.has(target.constructor)
     ? collectionHandlers
     : baseHandlers
   observed = new Proxy(target, handlers)
+
+  // REVIEW 反向索引，方便查找
   toProxy.set(target, observed)
   toRaw.set(observed, target)
+
+  // REVIEW target map用来查找dep
   if (!targetMap.has(target)) {
     targetMap.set(target, new Map())
   }

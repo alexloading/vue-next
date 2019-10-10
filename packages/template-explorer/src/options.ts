@@ -1,6 +1,7 @@
 import { h, reactive, createApp } from '@vue/runtime-dom'
 import { CompilerOptions } from '@vue/compiler-dom'
 
+debugger
 export const compilerOptions: CompilerOptions = reactive({
   mode: 'module',
   prefixIdentifiers: false,

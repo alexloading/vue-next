@@ -19,11 +19,13 @@ export function ref<T>(raw: T): Ref<T> {
   const v = {
     [refSymbol]: true,
     get value() {
+      // REVIEW 之前是在这里收集依赖
       track(v, OperationTypes.GET, '')
       return raw
     },
     set value(newVal) {
       raw = convert(newVal)
+      // REVIEW 重生效
       trigger(v, OperationTypes.SET, '')
     }
   }
